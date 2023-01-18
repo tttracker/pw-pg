@@ -1,9 +1,9 @@
 name: Playwright test
 
 on:
- workflow_dispatch:
- #schedule:
- # - cron: "*/5 * * * *"
+ #workflow_dispatch:
+ schedule:
+  - cron: "*/10 * * * *"
 
 env:
     fetchUrl: ${{ secrets.FETCH_URL }}
