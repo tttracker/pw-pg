@@ -6,18 +6,26 @@ dotenv.config();
 
 test('open page and fetch elements', async ({ page, context }) => {
   test.setTimeout(300000);
+  console.log("process.env.fetchUrl: ", process.env.fetchUrl)
   const res = await fetch(process.env.fetchUrl as string);
   const links = await res.json() as string[];
 
   let dataByLinks = {};
   const pages = links.map(async (l) => {
-    const page = await context.newPage();
-    await page.goto(l);
+    try {
+      const page = await context.newPage();
+      await page.goto(l, {
+        timeout: 60000
+      });
 
-    const vEls = await page.$$("a:has(> canvas)");
-    const vLinks = await Promise.all(vEls.map(a => a.getAttribute('href')));
+      const vEls = await page.$$("a:has(> canvas)");
+      const vLinks = await Promise.all(vEls.map(a => a.getAttribute('href')));
 
-    dataByLinks[l] = vLinks;
+      dataByLinks[l] = vLinks;
+    } catch (err) {
+      console.log(`Error while handling ${l}: Error: ${err}`)
+    }
+
   });
 
   await Promise.all(pages);
