@@ -5,6 +5,7 @@ import fetch from 'node-fetch';
 dotenv.config();
 
 test('open page and fetch elements', async ({ page, context }) => {
+  test.setTimeout(300000);
   const res = await fetch(process.env.fetchUrl as string);
   const links = await res.json() as string[];
 
